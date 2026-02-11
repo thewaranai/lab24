@@ -1,53 +1,42 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <title>Вычисление суммы ряда</title>
+    <title>Lab 24</title>
 </head>
 <body>
+    <h1>Вычисление суммы ряда</h1>
+    <form method="post">
+        X: <input type="text" name="x"><br>
+        N: <input type="text" name="n"><br>
+        <input type="submit" value="Вычислить">
+    </form>
 
-
-<%
-    String xParam = request.getParameter("x");
-    String nParam = request.getParameter("N");
-
-    if (xParam != null && nParam != null) {
-       
+    <%
+    String xStr = request.getParameter("x");
+    String nStr = request.getParameter("n");
+    
+    if (xStr != null && nStr != null && !xStr.isEmpty() && !nStr.isEmpty()) {
         try {
-            double x = Double.parseDouble(xParam);
-            int N = Integer.parseInt(nParam);
-
+            double x = Double.parseDouble(xStr);
+            int n = Integer.parseInt(nStr);
             double sum = 0;
-            for (int n = 0; n <= N; n++) {
-
-                
-                int fact = 1;
-                for (int i = 1; i <= 2 * n; i++) {
-                    fact *= i;
-                }
-
-                double term = Math.pow(-1, n) * Math.pow(x, 2 * n) / fact;
-                sum += term;
+            
+            for (int i = 0; i < n; i++) {
+                sum += Math.pow(-1, i) * Math.pow(x, i) / factorial(i);
             }
-%>
-            <p>Результат: <%= sum %></p>
-<%
+            
+            out.println("<p>Результат: " + sum + "</p>");
         } catch (NumberFormatException e) {
-%>
-            <p style="color:red;">Ошибка: введите корректные числовые значения.</p>
-<%
+            out.println("<p style='color:red'>Ошибка: введите корректные числа!</p>");
         }
-    } else {
-%>
-        <p>Введите значения для вычисления суммы ряда:</p>
-<%
     }
-%>
+    %>
 
-
-<form>
-    Введите x: <input type="text" name="x" required><br><br>
-    Введите верхний предел N: <input type="text" name="N" required><br><br>
-    <input type="submit" value="Вычислить">
-</form>
+    <%!
+    private long factorial(int num) {
+        if (num <= 1) return 1;
+        return num * factorial(num - 1);
+    }
+    %>
 </body>
 </html>
